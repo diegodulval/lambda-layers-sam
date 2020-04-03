@@ -1,0 +1,7 @@
+.aws
+.aws-sam
+.idea
+.venv
+.vscode/settings.json
+layers/python/python
+__pycache__/
