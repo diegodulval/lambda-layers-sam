@@ -1,0 +1,51 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "Build Python Lambda Function With Layers",
+            "type": "shell",
+            "command": "sam",
+            "args": [
+                "build"
+            ]
+        },
+        {
+            "label": "Debug Python Lambda Function",
+            "type": "shell",
+            "command": "sam",
+            "args": [
+                "local",
+                "invoke",
+                "Hello",
+                "--event",
+                "${workspaceFolder}/events/event.json",
+                "--docker-network",
+                "aws-resources",
+                "-d",
+                "5678"
+            ],
+            "dependsOn":["Build Python Lambda Function With Layers"],
+            "options": {
+                "env": {
+                    "VIRTUAL_ENV": "${workspaceFolder}/.venv"
+                }
+            },
+            "isBackground": true,
+            "problemMatcher": {
+                "pattern": [
+                    {
+                        "regexp": "^(x)(\\b)(x)$",
+                        "file": 1,
+                        "location": 2,
+                        "message": 3
+                    }
+                ],
+                "background": {
+                    "activeOnStart": true,
+                    "beginsPattern": "^Fetching lambci\\.\\w+ Docker container image",
+                    "endsPattern": "^waiting for debugger to attach\\.\\.\\.$"
+                }
+            }
+        }
+    ]
+}

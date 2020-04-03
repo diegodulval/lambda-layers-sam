@@ -1,0 +1,61 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: >
+    Test SAM
+
+Globals:
+    Function:
+        Timeout: 10
+
+Resources:
+
+    Parameters:
+      TABLENAME:
+        Type: String
+        Description: The DynamoDB table for storing Person information.
+        Default: 'PersonTable'
+
+      AWSENVNAME:
+        Type: String
+        Description: AWS Environment where code is being executed (AWS_SAM_LOCAL or AWS).
+        Default: 'AWS_SAM_LOCAL'
+
+    Resources:
+      PersonTable:
+        Type: AWS::DynamoDB::Table
+        Properties:
+          TableName: !Ref TABLENAME
+          AttributeDefinitions:
+            - AttributeName: Id
+              AttributeType: S
+          KeySchema:
+            - AttributeName: Id
+              KeyType: HASH
+          ProvisionedThroughput:
+            ReadCapacityUnits: 1
+            WriteCapacityUnits: 1
+
+
+    Hello:
+        Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
+        Properties:
+            CodeUri: functions/hello
+            Handler: app.lambda_handler
+            Policies: AmazonDynamoDBFullAccess
+            Runtime: python3.7
+            Layers:
+                - !Ref SimpleLayer
+            Environment:
+                Variables:
+                  TABLE: !Ref TABLENAME
+                  AWSENV: !Ref AWSENVNAME
+
+    SimpleLayer:
+        Type: AWS::Serverless::LayerVersion
+        Properties:
+            LayerName: simple-layer
+            Description: WIP - My Lambda Layer
+            ContentUri: layers/
+            CompatibleRuntimes:
+              - python3.7
+            RetentionPolicy: Delete
