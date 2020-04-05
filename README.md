@@ -1,5 +1,6 @@
 # [WIP] Boilerplate SAM
-Project to studies SAM using Layers and Functions
+Project to studies SAM using Layers and Functions.
+
 Below is a brief explanation of what we have in this repo:
 
 ```bash
@@ -28,7 +29,7 @@ Below is a brief explanation of what we have in this repo:
 sam build --template sam-template.yaml
 ```
 ```bash
-sam deploy
+sam deploy --parameter-overrides AWSENVNAME='PROD'
 ```
 ## Setup process
 

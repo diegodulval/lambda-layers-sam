@@ -1,1 +1,2 @@
+aws_xray_sdk==2.4.3
 ptvsd==4.2.4
