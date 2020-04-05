@@ -22,7 +22,6 @@ repos:
         args: ['--unsafe']
     -   id: debug-statements
     -   id: detect-private-key
-    -   id: double-quote-string-fixer
     -   id: end-of-file-fixer
     -   id: flake8
         args: ['--exclude=migrations/*']

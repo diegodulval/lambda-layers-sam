@@ -22,6 +22,14 @@ Below is a brief explanation of what we have in this repo:
 * [Docker installed](https://www.docker.com/community-edition)
 * [Python Virtual Environment](http://docs.python-guide.org/en/latest/dev/virtualenvs/)
 
+
+## Deploy
+```bash
+sam build --template sam-template.yaml
+```
+```bash
+sam deploy
+```
 ## Setup process
 
 ### Building the project

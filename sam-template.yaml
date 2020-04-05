@@ -1,0 +1,69 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: >
+  Boilerplate to organize and deploy AWS Resources with SAM
+
+Globals:
+    Function:
+        Timeout: 10
+
+Parameters:
+    TABLENAME:
+        Description: 'Required. The table name'
+        Type: 'String'
+        Default: 'PersonTable'
+
+    DEVENVNAME:
+      Type: String
+      Description: Developer environment where code is being executed (OSX, Windows, or Linux).
+      Default: 'OSX'
+
+    AWSENVNAME:
+      Type: String
+      Description: AWS Environment where code is being executed (AWS_SAM_LOCAL or AWS).
+      Default: 'PROD'
+
+Resources:
+    PersonTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: !Ref TABLENAME
+        AttributeDefinitions:
+          - AttributeName: Id
+            AttributeType: S
+        KeySchema:
+          - AttributeName: Id
+            KeyType: HASH
+        ProvisionedThroughput:
+          ReadCapacityUnits: 1
+          WriteCapacityUnits: 1
+
+    MyServerlessFunction:
+        Type: AWS::Serverless::Function
+        Properties:
+            CodeUri: functions/hello
+            Handler: app.lambda_handler
+            Policies: AmazonDynamoDBFullAccess
+            Runtime: python3.7
+            Layers:
+                - !Ref SimpleLayer
+            Environment:
+                Variables:
+                  TABLE: !Ref TABLENAME
+                  AWSENV: !Ref AWSENVNAME
+                  DEVENV: !Ref DEVENVNAME
+
+    SimpleLayer:
+        Type: AWS::Serverless::LayerVersion
+        Properties:
+            LayerName: my-serverless-layer
+            Description: WIP - My Lambda Layer
+            ContentUri: layers/
+            CompatibleRuntimes:
+              - python3.7
+            RetentionPolicy: Delete
+
+    MyS3Bucker:
+      Type: AWS::S3::Bucket
+      Properties:
+        BucketName: my-serverless-bucket-dd
