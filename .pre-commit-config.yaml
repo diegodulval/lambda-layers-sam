@@ -1,11 +1,5 @@
 repos:
 
--   repo: https://github.com/ambv/black
-    rev: stable
-    hooks:
-    - id: black
-      language_version: python3.7
-
 -   repo: https://github.com/pre-commit/mirrors-autopep8
     rev: '5985fb24f71421cd14f9cda5d6c7a06fc30b321c'  # Use the sha / tag you want to point at
     hooks:

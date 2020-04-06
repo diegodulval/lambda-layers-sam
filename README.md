@@ -25,11 +25,17 @@ Below is a brief explanation of what we have in this repo:
 
 
 ## Deploy
+We need generate the final template using:
 ```bash
-sam build --template sam-template.yaml
+sh generate_template.sh
 ```
+To build template
 ```bash
-sam deploy --parameter-overrides AWSENVNAME='PROD'
+sam build --use-container
+```
+And to deploy application in AWS run the command bellow
+```bash
+sam deploy --parameter-overrides ENVNAME='PROD'
 ```
 ## Setup process
 
@@ -68,12 +74,12 @@ aws dynamodb create-table --cli-input-json file://json/create_person_table.json 
 run the following command to build your project local testing and deployment:
 
 ```bash
-sam build
+sam build --template sam-template.yaml
 ```
 
 If your dependencies contain native modules that need to be compiled specifically for the operating system running on AWS Lambda, use this command to build inside a Lambda-like Docker container instead:
 ```bash
-sam build --use-container
+sam build --template sam-template.yaml --use-container
 ```
 
 By default, this command writes built artifacts to `.aws-sam/build` folder.

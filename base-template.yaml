@@ -9,19 +9,19 @@ Globals:
 
 Parameters:
     TABLENAME:
-        Description: 'Required. The table name'
-        Type: 'String'
-        Default: 'PersonTable'
+      Description: 'Required. The table name'
+      Type: 'String'
+      Default: 'PersonTable'
 
-    DEVENVNAME:
+    ENVNAME:
       Type: String
-      Description: Developer environment where code is being executed (OSX, Windows, or Linux).
-      Default: 'OSX'
-
-    AWSENVNAME:
-      Type: String
-      Description: AWS Environment where code is being executed (AWS_SAM_LOCAL or AWS).
-      Default: 'PROD'
+      Description: AWS Environment where code is being executed (AWS_SAM_LOCAL or
+          AWS).
+      AllowedValues:
+        - PROD
+        - TEST
+        - DEBUG
+      Default: TEST
 
 Resources:
     PersonTable:
@@ -37,22 +37,6 @@ Resources:
         ProvisionedThroughput:
           ReadCapacityUnits: 1
           WriteCapacityUnits: 1
-
-    MyServerlessFunction:
-        Type: AWS::Serverless::Function
-        Properties:
-            CodeUri: functions/hello
-            Handler: app.lambda_handler
-            Policies: AmazonDynamoDBFullAccess
-            Runtime: python3.7
-            Layers:
-                - !Ref SimpleLayer
-            Tracing: Active
-            Environment:
-                Variables:
-                  TABLE: !Ref TABLENAME
-                  AWSENV: !Ref AWSENVNAME
-                  DEVENV: !Ref DEVENVNAME
 
     SimpleLayer:
         Type: AWS::Serverless::LayerVersion

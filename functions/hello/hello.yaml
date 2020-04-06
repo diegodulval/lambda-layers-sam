@@ -1,0 +1,15 @@
+Resources:
+   MyServerlessFunction:
+        Type: AWS::Serverless::Function
+        Properties:
+            CodeUri: functions/hello
+            Handler: app.lambda_handler
+            Policies: AmazonDynamoDBFullAccess
+            Runtime: python3.7
+            Layers:
+                - !Ref SimpleLayer
+            Tracing: Active
+            Environment:
+                Variables:
+                  TABLE: !Ref TABLENAME
+                  ENVNAME: !Ref ENVNAME

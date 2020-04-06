@@ -1,39 +1,46 @@
 import os
-from aws_xray_sdk.core import xray_recorder
+from aws_xray_sdk.core import xray_recorder, patch_all
 
-from Dynamo import Dynamo
+from persistence.Dynamo import Dynamo
+from Logging import get_logger
 
-from helpers import start_debbuger, start_logger
+logger = get_logger()
+patch_all()
 
-table_name = os.environ["TABLE"]
-aws_environment = os.environ["AWSENV"]
-is_local_env = aws_environment == "LOCAL"
+if "DEBUG" in os.environ:
+    from helpers import start_debbuger
 
-logger = start_logger()
-
-if aws_environment == "DEBUG":
     start_debbuger()
 
 
-def respond(err, res=None):
+def get_event_user(event):
     return {
-        "statusCode": "400" if err else "200",
-        "body": err if err else res,
-        "headers": {"Content-Type": "application/json"},
+        "FirstName": event["name"],
+        "LastName": event["lastname"],
+        "Age": event["age"],
     }
+
+
+def define_xray_subsegment(name, function, arg):
+    xray_recorder.begin_subsegment(name)
+    response = function(arg)
+    xray_recorder.end_subsegment()
+    return response
 
 
 @xray_recorder.capture("lambda_handler")
 def lambda_handler(event, context):
-    user = {"FirstName": "Ditinho", "LastName": "Due", "Age": 24}
-    try:
-        xray_recorder.begin_subsegment("dynamo_layer")
-        dynamo = Dynamo(is_local_env=is_local_env, tablename=table_name)
-        PersonId = dynamo.create(item=user)
-        item = dynamo.read_by_id(id=PersonId)
+    user = get_event_user(event)
+
+    def save_user(user):
+        endpoint_url = (
+            os.environ["DATABSE_URL"] if "DATABASE_URL" in os.environ else None
+        )
+        dynamo = Dynamo(endpoint_url=endpoint_url,
+                        tablename=os.environ["TABLE"])
+        created_user = dynamo.create(item=user)
         logger.info("Success to create and find user")
-        xray_recorder.end_subsegment()
-        return respond(None, {"user": item})
-    except Exception as e:
-        logger.error(e)
-        return respond("Failed")
+        return created_user
+
+    user_created = define_xray_subsegment("save_user", save_user, user)
+    return user_created

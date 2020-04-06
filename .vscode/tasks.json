@@ -2,11 +2,17 @@
     "version": "2.0.0",
     "tasks": [
         {
+            "label": "Generate SAM template",
+            "type": "shell",
+            "command": "sh build.sh"
+        },
+        {
             "label": "Build Python Lambda Function With Layers",
             "type": "shell",
             "command": "sam",
             "args": [
-                "build"
+                "build",
+                "--use-container"
             ]
         },
         {
@@ -16,11 +22,13 @@
             "args": [
                 "local",
                 "invoke",
-                "Hello",
+                "MyServerlessFunction",
                 "--event",
                 "${workspaceFolder}/events/event.json",
                 "--docker-network",
                 "aws-resources",
+                "--env-vars",
+                "json/env-local.json",
                 "-d",
                 "5678"
             ],

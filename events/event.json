@@ -1,3 +1,5 @@
 {
-  "test": "Hello!"
+  "name": "Diego",
+  "age": 24,
+  "lastname": "de Freitas"
 }

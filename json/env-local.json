@@ -1,0 +1,8 @@
+{
+    "MyServerlessFunction": {
+      "TABLE": "PersonTable",
+      "ENVNAME": "LOCAL",
+      "DEBUG" : true,
+      "DATABASE_URL": "http://dynamo:8000"
+    }
+  }

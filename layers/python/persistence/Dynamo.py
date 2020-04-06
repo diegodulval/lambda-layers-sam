@@ -1,23 +1,24 @@
 import boto3
 import uuid
-from Persistence import Persistence
+from persistence.Persistence import Persistence
 
 
 class Dynamo(Persistence):
     def __init__(
-        self, tablename, is_local_env=False,
+        self, tablename, endpoint_url=None,
     ):
-        if is_local_env:
+        if endpoint_url is not None:
             self.person_table = boto3.resource(
-                "dynamodb", endpoint_url="http://dynamo:8000/"
+                "dynamodb", endpoint_url=endpoint_url
             ).Table(tablename)
         else:
             self.person_table = boto3.resource("dynamodb").Table(tablename)
 
     def create(self, item):
         PersonId = str(uuid.uuid4())
-        self.person_table.put_item(Item={"Id": PersonId, **item})
-        return PersonId
+        user = {"Id": PersonId, **item}
+        self.person_table.put_item(Item=user)
+        return user
 
     def read_by_id(self, id):
         response = self.person_table.get_item(Key={"Id": id})

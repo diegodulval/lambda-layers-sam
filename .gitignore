@@ -3,5 +3,6 @@
 .idea
 .venv
 .vscode/settings.json
+template.yaml
 layers/python/python
 __pycache__/
