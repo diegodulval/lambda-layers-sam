@@ -38,12 +38,22 @@ Resources:
           ReadCapacityUnits: 1
           WriteCapacityUnits: 1
 
-    SimpleLayer:
+    FunctionLayer:
         Type: AWS::Serverless::LayerVersion
         Properties:
-            LayerName: my-serverless-layer
+            LayerName: function-layer
             Description: WIP - My Lambda Layer
             ContentUri: layers/
+            CompatibleRuntimes:
+              - python3.7
+            RetentionPolicy: Delete
+
+    DependencyLayer:
+        Type: AWS::Serverless::LayerVersion
+        Properties:
+            LayerName: dependency-layer
+            Description: WIP - My Dependencies Lambda Layer
+            ContentUri: dependencies/
             CompatibleRuntimes:
               - python3.7
             RetentionPolicy: Delete

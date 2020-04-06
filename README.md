@@ -29,6 +29,10 @@ We need generate the final template using:
 ```bash
 sh generate_template.sh
 ```
+Download dependencies
+```bash
+docker run -v "$PWD":/var/task "lambci/lambda:build-python3.7" /bin/sh -c "pip install -r requirements.txt -t python/; exit"
+```
 To build template
 ```bash
 sam build --use-container

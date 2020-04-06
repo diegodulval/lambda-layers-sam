@@ -4,5 +4,6 @@
 .venv
 .vscode/settings.json
 template.yaml
-layers/python/python
+dependencies/python
 __pycache__/
+.DS_Store
