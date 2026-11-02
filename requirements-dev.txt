@@ -1,4 +1,4 @@
 pre_commit==2.2.0
-pylint==2.4.4
+pylint==4.0.9
 ruamel.yaml==0.16.10
 ptvsd==4.2.4
